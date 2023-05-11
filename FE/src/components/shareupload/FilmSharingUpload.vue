@@ -20,11 +20,13 @@
           </div>
           <div class="left_container__input">
             <h2>설명</h2>
-            <input
+            <label for="input-content"></label>
+            <textarea
               class="left_container__input__input_content"
+              id="input-content"
               @input="uploadData.articleContent = $event.target.value"
               placeholder="설명을 입력해주세요."
-            />
+            ></textarea>
           </div>
           <div class="left_container__input">
             <h2>썸네일</h2>
@@ -41,13 +43,15 @@
                 hidden
               />
               <label for="upload-image">
-                <img
-                  id="thumbnailsibal"
-                  ref="uploadImageEle"
-                  src="@/assets/images/SelectImage.png"
-                  class="thumbnail_upload"
-                  alt=""
-                />
+                <div class="select-image-frame">
+                  <img
+                    id="thumbnailsibal"
+                    ref="uploadImageEle"
+                    src="@/assets/images/SelectImage.png"
+                    class="thumbnail_upload"
+                    alt=""
+                  />
+                </div>
               </label>
             </div>
           </div>
@@ -153,22 +157,19 @@ export default {
       uploadFlimShareImageUpload(
         thumbNailFile.value,
         ({ Location }) => {
-          console.log(Location);
           uploadData.articleThumbnailUrl = Location;
           putFilmShare(
             uploadData,
-            ({ data }) => {
-              console.log(data, "생성 완료");
+            () => {
               emit("updateFilmList");
             },
             (error) => {
-              console.log(error);
-              console.log(uploadData);
+              console.log("필름 업로드 에러:", error);
             }
           );
         },
-        (err) => {
-          console.log(err);
+        (error) => {
+          console.log("필름 업로드 에러:", error);
         }
       );
     };
@@ -187,26 +188,22 @@ export default {
     getMyStudio(
       { user_id: userData.userId },
       ({ data }) => {
-        console.log("My studio data:", data);
         data.forEach((array) => {
           MyStudioData.value.push([array.studioId, array.studioTitle]);
         });
-        console.log("데이터가 잘 들어갔나?", MyStudioData);
       },
       (error) => {
-        console.log(error);
+        console.log("내 스튜디오 찾기 에러:", error);
       }
     );
 
     const selectStudio = (studioTitle) => {
-      console.log(studioTitle);
       MyFilmData.value = [];
       FilmDetailData.value = {};
       selectedFilm.value = "";
       getMyFilm(
         { user_id: userData.userId, studio_id: studioTitle },
         ({ data }) => {
-          console.log("Get My film data:", data);
           data.forEach((array) => {
             MyFilmData.value.push(array);
             FilmDetailData.categoryName = array.myPageFilmsResponse.categoryName;
@@ -214,34 +211,24 @@ export default {
             FilmDetailData.storyTitle = array.myPageFilmsResponse.storyTitle;
             FilmDetailData.teamMembers = array.teamMembers;
           });
-
-          console.log("내 필름 정보랑 상세 정보가 들어갔나?");
-          console.log(MyFilmData);
-          console.log(FilmDetailData);
         },
         (error) => {
-          console.log(error);
+          console.log("내 필름 가져오기 에러 :", error);
         }
       );
     };
     const onChangeStudio = (event) => {
       selectStudio(event.target.value);
     };
-
     const selectFilm = (choiceFilm) => {
-      console.log("choice Flim", choiceFilm);
       MyFilmData.value.forEach((array) => {
-        console.log(array.myPageFilmsResponse.filmId, choiceFilm);
         if (array.myPageFilmsResponse.filmId === parseInt(choiceFilm, 10)) {
-          console.log("choice Flim url ", array.myPageFilmsResponse.filmVideoUrl);
           FilmDetailData.filmVideoUrl = array.myPageFilmsResponse.filmVideoUrl;
           uploadData.filmId = choiceFilm;
         }
       });
     };
     const onChangeFlim = (event) => {
-      console.log("event", event.target);
-      console.log("onChageFlim", event.target.value);
       selectFilm(event.target.value);
     };
 
@@ -295,6 +282,10 @@ export default {
   width: 100%;
   padding: 0px 20px;
   box-sizing: border-box;
+  span {
+    font-size: 20px;
+    font-weight: 500;
+  }
 }
 
 .film-upload-container__main {
@@ -310,7 +301,6 @@ export default {
   border-right: 1px solid rgb(211, 211, 211);
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
 }
 
 .right_container {
@@ -327,7 +317,7 @@ export default {
 
 .left_container__input h2 {
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   margin: 7px;
 }
 
@@ -349,7 +339,9 @@ export default {
   border: 1px solid #ff5775;
   border-radius: 10px;
   width: 90%;
-  height: 60px;
+  height: 100px;
+  vertical-align: top;
+  resize: none;
 }
 </style>
 
@@ -360,16 +352,24 @@ export default {
 }
 
 .thumbnail_upload {
-  width: 200px;
-  height: 100px;
-  border: 1px solid #ff5775;
-  margin: 0px 10px;
-  border-radius: 20px;
+  width: 300px;
+  height: 150px;
+  display: flex;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+}
+.select-image-frame {
+  height: 150px;
+  width: 300px;
+  border: #ff5775 1px solid;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
-
 .img_upload {
   display: none;
 }
@@ -380,6 +380,7 @@ export default {
 
 .select-studio span {
   margin-right: 30px;
+  font-weight: 500;
 }
 
 .select-film {
@@ -388,12 +389,12 @@ export default {
 
 .select-film span {
   margin-right: 60px;
+  font-weight: 500;
 }
 
 .preview-film {
   padding: 10px;
   display: flex;
-  flex-direction: column;
 }
 
 .preview-film__info {
@@ -404,12 +405,13 @@ export default {
 }
 
 .filmVideo {
-  width: 70%;
+  width: 400px;
   aspect-ratio: 2.5/1.5;
 }
 
 .preview-film span {
   margin-bottom: 5px;
+  font-weight: 500;
 }
 
 .preview-film__content {
@@ -417,6 +419,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-left: 90px;
 }
 
 .uploadbutton {
@@ -430,11 +433,6 @@ export default {
   border-radius: 4px;
   float: right;
   cursor: pointer;
-}
-
-.thumbnail_upload {
-  width: 150px;
-  height: 80px;
-  object-fit: cover;
+  margin-right: 20px;
 }
 </style>

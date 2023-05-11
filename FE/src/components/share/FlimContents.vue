@@ -15,7 +15,7 @@
         <div class="post_icon">
           <heart class="heart"></heart><talk class="talk"></talk><share class="share"></share>
         </div>
-        <div class="post_favor">좋아요 93개</div>
+        <div class="post_favor">좋아요 0개</div>
       </div>
     </div>
   </div>
@@ -40,24 +40,6 @@ export default {
   setup(props) {
     const postdata = ref(props.filmdata);
     return { postdata };
-  },
-  data() {
-    return {
-      profilelist: [
-        {
-          // eslint-disable-next-line global-require
-          profileimg: require("@/assets/images/profile.jpg"),
-          nickname: "jung_DM",
-          content: "농구가 하고 싶어요...",
-        },
-        {
-          // eslint-disable-next-line global-require
-          profileimg: require("@/assets/images/profile.jpg"),
-          nickname: "jung_DM",
-          content: "코딩도... 하고 싶어요",
-        },
-      ],
-    };
   },
 };
 </script>
