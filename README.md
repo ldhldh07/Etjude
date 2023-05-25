@@ -134,7 +134,7 @@ git clone https://lab.ssafy.com/s08-webmobile1-sub2/S08P12A605.git
   백엔드 디렉토리 구조
   </summary>
   ```
-  
+
       unnamed
       ┣ api
       ┃ ┣ controller
@@ -300,7 +300,11 @@ git clone https://lab.ssafy.com/s08-webmobile1-sub2/S08P12A605.git
 
 ![검색.gif](./assets/검색.gif)
 
+- 드라마, 뮤지컬, 연극, 영화로 구분하여 자료를 검색할 수 있습니다
+- 해당 카테고리에서 작품, 스토리로 나눠서 확인할 수 있습니다
+- 검색하기 전에는 전체 목록이 출력되며 검색창에 입력시 실시간으로 결과를 출력합니다
 
+![검색2](./assets/%EA%B2%80%EC%83%892.gif)
 
 #### 필름공유
 
